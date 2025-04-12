@@ -12,7 +12,7 @@ def open_picking_protein_types():
 
     new_window = tk.Toplevel(root)
     new_window.title("Picking Protein Types")
-    new_window.geometry("600x500")
+    new_window.geometry("800x600")  # Increased width and height for better visibility
     
     label = tk.Label(new_window, text="Picking Protein Types Analysis", font=("Times New Roman", 14, "bold"))
     label.pack(pady=10)
@@ -123,7 +123,7 @@ def open_picking_protein_types():
 def open_longest_protein_window():
     new_window = tk.Toplevel(root)
     new_window.title("Determine Longest Protein")
-    new_window.geometry("600x400")
+    new_window.geometry("800x600")  # Increased width and height for better visibility
     
     input_frame = tk.Frame(new_window)
     input_frame.pack(side=tk.LEFT, padx=10, pady=10)
@@ -300,27 +300,50 @@ def open_consensus_printer_window():
 # Initialize main window
 root = tk.Tk()
 root.title("Viral Genome Analysis Tool")
-root.geometry("600x300")
+
+# Set the initial dimensions to fit all widgets
+root.geometry("1560x600")  # Increased width and height for better visibility
+
+# Configure root for dynamic resizing
+root.rowconfigure(0, weight=1)
+root.columnconfigure(0, weight=1)
 
 # Main Frame to Hold Title, Description, and Options
 main_frame = tk.Frame(root)
-main_frame.grid(row=0, column=0, columnspan=3, padx=5, pady=5, sticky="we")
+main_frame.grid(row=0, column=0, columnspan=3, padx=5, pady=5, sticky="nsew")
+
+# Configure main_frame for resizing
+main_frame.rowconfigure(0, weight=1)  # Title row
+main_frame.rowconfigure(1, weight=3)  # Description row (increased weight for more space)
+main_frame.columnconfigure(0, weight=2)  # Title and description column
+main_frame.columnconfigure(1, weight=1)  # Options column
 
 # Title Section
 title_frame = tk.Frame(main_frame, relief="groove", borderwidth=3)
-title_frame.grid(row=0, column=0, padx=5, pady=5, sticky="we")
+title_frame.grid(row=0, column=0, padx=5, pady=5, sticky="nsew")
 title_label = tk.Label(title_frame, text="Viral Genome Analysis Tool", font=("Times New Roman", 14, "bold"))
 title_label.pack(padx=5, pady=5)
 
 # Description Section
 description_frame = tk.Frame(main_frame, relief="groove", borderwidth=3)
-description_frame.grid(row=1, column=0, padx=5, pady=5, sticky="we")
-description_label = tk.Label(description_frame, text="This software allows users to parse through and analyze specific viral proteins for consensus sequence analysis, ORF determination, protein translation as well as graphical analysis. Please refer to the documentation listed here to download a PDF version of documentation for a step-by-step process. For a self-guided experience, please refer to the links below for analysis.", wraplength=400, justify="left", font=("Times New Roman", 12))
-description_label.pack(padx=5, pady=5)
+description_frame.grid(row=1, column=0, padx=5, pady=5, sticky="nsew")
+description_label = tk.Label(
+    description_frame,
+    text=(
+        "This software allows users to parse through and analyze specific viral proteins for consensus sequence analysis, "
+        "ORF determination, protein translation as well as graphical analysis. Please refer to the documentation listed "
+        "here to download a PDF version of documentation for a step-by-step process. For a self-guided experience, please "
+        "refer to the links below for analysis."
+    ),
+    wraplength=600,  # Increased wraplength to fit the frame
+    justify="left",  # Align text to the left
+    font=("Times New Roman", 12)
+)
+description_label.pack(padx=10, pady=10, fill="both", expand=True)
 
 # Options Section (Next to Title and Description)
 options_frame = tk.Frame(main_frame, relief="groove", borderwidth=3)
-options_frame.grid(row=0, column=1, rowspan=2, padx=10, pady=5, sticky="n")
+options_frame.grid(row=0, column=1, rowspan=2, padx=10, pady=5, sticky="nsew")
 options_label = tk.Label(options_frame, text="Options", font=("Times New Roman", 12))
 options_label.grid(row=0, column=0, columnspan=4, pady=5)
 
@@ -341,17 +364,24 @@ option_buttons["Determining Longest Protein"] = open_longest_protein_window
 option_buttons["Creating Alignment graph"] = open_alignment_graph_window
 option_buttons["Consensus Sequence Printer"] = open_consensus_printer_window
 
-# Arrange buttons in 3 rows with varying columns
+# Configure options_frame for dynamic resizing
+options_frame.rowconfigure(0, weight=1)  # Title row
+for i in range(3):  # Configure rows for buttons
+    options_frame.rowconfigure(i + 1, weight=1)
+for j in range(3):  # Configure columns for buttons
+    options_frame.columnconfigure(j, weight=1)
+
+# Arrange buttons in a grid (3 rows, 3 columns) with explicit width
 button_grid = [
     list(option_buttons.keys())[:3],  # First row (3 buttons)
-    list(option_buttons.keys())[3:7], # Second row (4 buttons)
-    list(option_buttons.keys())[7:]    # Third row (3 buttons)
+    list(option_buttons.keys())[3:6],  # Second row (3 buttons)
+    list(option_buttons.keys())[6:]   # Third row (remaining buttons)
 ]
 
 for r, row in enumerate(button_grid):
     for c, option in enumerate(row):
-        btn = ttk.Button(options_frame, text=option, command=option_buttons[option])
-        btn.grid(row=r+1, column=c, padx=5, pady=2, sticky="ew")
+        btn = ttk.Button(options_frame, text=option, command=option_buttons[option], width=25)  # Set explicit width
+        btn.grid(row=r + 1, column=c, padx=10, pady=10, sticky="nsew")
 
 # Run Application
 root.mainloop()
