@@ -8,8 +8,6 @@ selected_proteins = []
 # Function to open a new GUI window for Picking Protein Types
 
 def open_picking_protein_types():
-
-
     new_window = tk.Toplevel(root)
     new_window.title("Picking Protein Types")
     new_window.geometry("800x600")  # Increased width and height for better visibility
@@ -69,7 +67,7 @@ def open_picking_protein_types():
     display_frame = tk.Frame(new_window)
     display_frame.pack(pady=10)
     
-    output_text = tk.Text(display_frame, height=10, width=40, state=tk.DISABLED)
+    output_text = tk.Text(display_frame, height=10, width=40)
     output_text.grid(row=0, column=0, padx=5)
     
     protein_listbox = tk.Listbox(display_frame, selectmode=tk.MULTIPLE, width=40, height=10)
@@ -81,20 +79,27 @@ def open_picking_protein_types():
         all_pros_file_name = allpros_name_entry.get()
         all_pros_file_path = f"{all_pros_folder}/{all_pros_file_name}"
         
-        output_text.config(state=tk.NORMAL)
         output_text.delete(1.0, tk.END)
-        sys.stdout = io.StringIO()
         
-        output = func.determining_protein_types(file_name, all_pros_file_path)
-        print('By looking at the protein types above, decide which protein types you want to explore more.')
+        # Create a StringIO buffer for capturing print statements
+        output_capture = io.StringIO()
+        original_stdout = sys.stdout
+        sys.stdout = output_capture
         
-        output_text.insert(tk.END, sys.stdout.getvalue())
-        output_text.config(state=tk.DISABLED)
-        sys.stdout = sys.__stdout__
-        
-        protein_listbox.delete(0, tk.END)
-        for item in output:
-            protein_listbox.insert(tk.END, item)
+        try:
+            output = func.determining_protein_types(file_name, all_pros_file_path)
+            print('By looking at the protein types above, decide which protein types you want to explore more.')
+            
+            # Redirect output to the text widget
+            output_text.insert(tk.END, output_capture.getvalue())
+            
+            protein_listbox.delete(0, tk.END)
+            for item in output:
+                protein_listbox.insert(tk.END, item)
+        except Exception as e:
+            output_text.insert(tk.END, f"Error: {str(e)}")
+        finally:
+            sys.stdout = original_stdout  # Restore original stdout
     
     def select_proteins():
         selected_proteins = [protein_listbox.get(i) for i in protein_listbox.curselection()]
@@ -104,9 +109,23 @@ def open_picking_protein_types():
         output_file = f"{keylengths_folder}/{keylengths_file_name}"
         
         all_pros_file_path = f"{allpros_folder_entry.get()}/{allpros_name_entry.get()}"
-        func.key_protein_lengths(selected_proteins, output_file, all_pros_file_path)
-        print(' ')
-        print('Your file has been created in your request pathway.')   
+        
+        # Create a StringIO buffer for capturing print statements
+        output_capture = io.StringIO()
+        original_stdout = sys.stdout
+        sys.stdout = output_capture
+        
+        try:
+            func.key_protein_lengths(selected_proteins, output_file, all_pros_file_path)
+            print(' ')
+            print('Your file has been created in your request pathway.')
+            
+            # Append to the existing text
+            output_text.insert(tk.END, output_capture.getvalue())
+        except Exception as e:
+            output_text.insert(tk.END, f"\nError: {str(e)}")
+        finally:
+            sys.stdout = original_stdout  # Restore original stdout
     
     button_frame = tk.Frame(new_window)
     button_frame.pack(pady=10)
@@ -130,6 +149,10 @@ def open_longest_protein_window():
     
     output_frame = tk.Frame(new_window)
     output_frame.pack(side=tk.RIGHT, padx=10, pady=10)
+    
+    # Add output text widget
+    output_text = tk.Text(new_window, height=10, width=80)
+    output_text.pack(side=tk.BOTTOM, fill=tk.BOTH, expand=True, padx=10, pady=10)
     
     def select_file():
         file_path = filedialog.askopenfilename(title="Select Input File")
@@ -170,7 +193,24 @@ def open_longest_protein_window():
         last_file_name = file_entry.get()
         genotypes = genotype_entry.get().split(',')
         folder_name = folder_entry.get()
-        func.finding_longest_protein(last_file_name, genotypes, folder_name)
+        
+        # Clear output text
+        output_text.delete(1.0, tk.END)
+        
+        # Create a StringIO buffer for capturing print statements
+        output_capture = io.StringIO()
+        original_stdout = sys.stdout
+        sys.stdout = output_capture
+        
+        try:
+            func.finding_longest_protein(last_file_name, genotypes, folder_name)
+            
+            # Display captured output
+            output_text.insert(tk.END, output_capture.getvalue())
+        except Exception as e:
+            output_text.insert(tk.END, f"Error: {str(e)}")
+        finally:
+            sys.stdout = original_stdout  # Restore original stdout
     
     tk.Button(input_frame, text="Run Analysis", command=run_analysis).pack(pady=10)
     
@@ -193,15 +233,32 @@ def open_longest_protein_window():
         input_file = consensus_input_entry.get()
         output_folder = consensus_output_folder_entry.get()
         output_file = f"{output_folder}/{consensus_output_name_entry.get()}"
-        func.consensus_determination_file_creator(input_file, output_file)
+        
+        # Create a StringIO buffer for capturing print statements
+        output_capture = io.StringIO()
+        original_stdout = sys.stdout
+        sys.stdout = output_capture
+        
+        try:
+            func.consensus_determination_file_creator(input_file, output_file)
+            
+            # Display captured output
+            output_text.insert(tk.END, output_capture.getvalue())
+        except Exception as e:
+            output_text.insert(tk.END, f"Error: {str(e)}")
+        finally:
+            sys.stdout = original_stdout  # Restore original stdout
     
     tk.Button(output_frame, text="Generate Consensus Determination File", command=generate_consensus_file).pack(pady=10)
-    
 
 def open_votes_calculation_window():
     new_window = tk.Toplevel(root)
     new_window.title("Votes Calculation")
-    new_window.geometry("500x300")
+    new_window.geometry("500x400")  # Increased height for output display
+    
+    # Add output text widget
+    output_text = tk.Text(new_window, height=10, width=60)
+    output_text.pack(side=tk.BOTTOM, fill=tk.BOTH, expand=True, padx=10, pady=10)
     
     def select_input_file():
         file_path = filedialog.askopenfilename(title="Select Alignment Input File")
@@ -227,12 +284,38 @@ def open_votes_calculation_window():
     output_file_entry = tk.Entry(new_window, width=40)
     output_file_entry.pack()
     
-    tk.Button(new_window, text="Calculate Votes", command=lambda: func.protein_votes_file(input_entry.get(), f"{output_folder_entry.get()}/{output_file_entry.get()}")).pack()
+    def calculate_votes():
+        input_file = input_entry.get()
+        output_file = f"{output_folder_entry.get()}/{output_file_entry.get()}"
+        
+        # Clear output text
+        output_text.delete(1.0, tk.END)
+        
+        # Create a StringIO buffer for capturing print statements
+        output_capture = io.StringIO()
+        original_stdout = sys.stdout
+        sys.stdout = output_capture
+        
+        try:
+            func.protein_votes_file(input_file, output_file)
+            
+            # Display captured output
+            output_text.insert(tk.END, output_capture.getvalue())
+        except Exception as e:
+            output_text.insert(tk.END, f"Error: {str(e)}")
+        finally:
+            sys.stdout = original_stdout  # Restore original stdout
+    
+    tk.Button(new_window, text="Calculate Votes", command=calculate_votes).pack(pady=10)
 
 def open_alignment_graph_window():
     new_window = tk.Toplevel(root)
     new_window.title("Create Alignment Graph")
-    new_window.geometry("500x300")
+    new_window.geometry("500x400")  # Increased height for output display
+    
+    # Add output text widget
+    output_text = tk.Text(new_window, height=10, width=60)
+    output_text.pack(side=tk.BOTTOM, fill=tk.BOTH, expand=True, padx=10, pady=10)
     
     def select_votes_file():
         file_path = filedialog.askopenfilename(title="Select Votes File")
@@ -251,7 +334,24 @@ def open_alignment_graph_window():
     def generate_graph():
         votes_file = votes_entry.get()
         title = title_entry.get()
-        func.create_variability_graph(votes_file, title)
+        
+        # Clear output text
+        output_text.delete(1.0, tk.END)
+        
+        # Create a StringIO buffer for capturing print statements
+        output_capture = io.StringIO()
+        original_stdout = sys.stdout
+        sys.stdout = output_capture
+        
+        try:
+            func.create_variability_graph(votes_file, title)
+            
+            # Display captured output
+            output_text.insert(tk.END, output_capture.getvalue())
+        except Exception as e:
+            output_text.insert(tk.END, f"Error: {str(e)}")
+        finally:
+            sys.stdout = original_stdout  # Restore original stdout
     
     tk.Button(new_window, text="Generate Graph", command=generate_graph).pack(pady=10)
 
@@ -268,6 +368,7 @@ def open_consensus_printer_window():
     def run_consensus():
         file_name = votes_entry.get()
         output_capture = io.StringIO()  # Create a StringIO buffer
+        original_stdout = sys.stdout  # Save the original stdout
         sys.stdout = output_capture  # Redirect stdout
 
         try:
@@ -282,10 +383,7 @@ def open_consensus_printer_window():
             output_text.insert(tk.END, f"Error: {str(e)}")
             output_text.config(state=tk.DISABLED)
         finally:
-            sys.stdout = sys.__stdout__  # Restore original stdout
-
-
-
+            sys.stdout = original_stdout  # Restore original stdout
     
     tk.Label(new_window, text="Select Votes File:").pack()
     votes_entry = tk.Entry(new_window, width=40)
@@ -295,14 +393,29 @@ def open_consensus_printer_window():
     tk.Button(new_window, text="Run Consensus", command=run_consensus).pack(pady=10)
     
     output_text = tk.Text(new_window, height=10, width=50, state=tk.DISABLED)
-    output_text.pack()    
+    output_text.pack()
+
+def open_analysis_window(analysis_type):
+    new_window = tk.Toplevel(root)
+    new_window.title(analysis_type)
+    new_window.geometry("600x400")
+    
+    # Add output text widget for capturing print statements
+    output_text = tk.Text(new_window, height=15, width=70)
+    output_text.pack(side=tk.BOTTOM, fill=tk.BOTH, expand=True, padx=10, pady=10)
+    
+    tk.Label(new_window, text=f"{analysis_type} not yet implemented.", font=("Times New Roman", 12)).pack(pady=20)
+    
+    tk.Button(new_window, text="Close", command=new_window.destroy).pack()
 
 # Initialize main window
 root = tk.Tk()
 root.title("Viral Genome Analysis Tool")
 
 # Set the initial dimensions to fit all widgets
-root.geometry("1560x600")  # Increased width and height for better visibility
+screen_width = root.winfo_screenwidth()
+screen_height = root.winfo_screenheight()
+root.geometry(f"{screen_width}x{screen_height}")
 
 # Configure root for dynamic resizing
 root.rowconfigure(0, weight=1)
@@ -321,8 +434,14 @@ main_frame.columnconfigure(1, weight=1)  # Options column
 # Title Section
 title_frame = tk.Frame(main_frame, relief="groove", borderwidth=3)
 title_frame.grid(row=0, column=0, padx=5, pady=5, sticky="nsew")
-title_label = tk.Label(title_frame, text="Viral Genome Analysis Tool", font=("Times New Roman", 14, "bold"))
-title_label.pack(padx=5, pady=5)
+title_label = tk.Label(
+    title_frame,
+    text="Viral Genome Analysis Tool",
+    font=("Times New Roman", 24, "bold"),  # Increased font size
+    anchor="center",                       # Anchor text center
+    justify="center"                       # Justify center
+)
+title_label.pack(padx=5, pady=20, fill="both", expand=True)  # Expand to center in the frame
 
 # Description Section
 description_frame = tk.Frame(main_frame, relief="groove", borderwidth=3)
@@ -331,15 +450,15 @@ description_label = tk.Label(
     description_frame,
     text=(
         "This software allows users to parse through and analyze specific viral proteins for consensus sequence analysis, "
-        "ORF determination, protein translation as well as graphical analysis. Please refer to the documentation listed "
-        "here to download a PDF version of documentation for a step-by-step process. For a self-guided experience, please "
-        "refer to the links below for analysis."
+        "ORF determination, protein translation, and graphical analysis. Please refer to the documentation to download a "
+        "step-by-step guide, or use the links below to start analyzing."
     ),
-    wraplength=600,  # Increased wraplength to fit the frame
-    justify="left",  # Align text to the left
-    font=("Times New Roman", 12)
+    wraplength=400,  # Wider to avoid line cutoff
+    justify="center",  # Center the text lines
+    font=("Times New Roman", 14),
+    anchor="center"
 )
-description_label.pack(padx=10, pady=10, fill="both", expand=True)
+description_label.pack(padx=20, pady=20, fill="both", expand=True)
 
 # Options Section (Next to Title and Description)
 options_frame = tk.Frame(main_frame, relief="groove", borderwidth=3)
@@ -349,20 +468,15 @@ options_label.grid(row=0, column=0, columnspan=4, pady=5)
 
 option_buttons = {
     "Picking Protein Types": open_picking_protein_types,
-    "Determining Longest Protein": lambda: open_analysis_window("Determining Longest Protein"),
+    "Determining Longest Protein": open_longest_protein_window,
     "Votes Calculation": open_votes_calculation_window,
-    "Creating Alignment graph": lambda: open_analysis_window("Creating Alignment graph"),
+    "Creating Alignment graph": open_alignment_graph_window,
     "ORF match file creator": lambda: open_analysis_window("ORF match file creator"),
     "ORF Analyzer": lambda: open_analysis_window("ORF Analyzer"),
     "Genome Modifier": lambda: open_analysis_window("Genome Modifier"),
     "Protein Translator": lambda: open_analysis_window("Protein Translator"),
-    "Consensus Sequence Printer": lambda: open_analysis_window("Consensus Sequence Printer")
+    "Consensus Sequence Printer": open_consensus_printer_window
 }
-
-# Update "Determining Longest Protein" button to open the new window
-option_buttons["Determining Longest Protein"] = open_longest_protein_window
-option_buttons["Creating Alignment graph"] = open_alignment_graph_window
-option_buttons["Consensus Sequence Printer"] = open_consensus_printer_window
 
 # Configure options_frame for dynamic resizing
 options_frame.rowconfigure(0, weight=1)  # Title row
