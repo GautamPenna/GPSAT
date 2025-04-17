@@ -48,11 +48,6 @@ def open_picking_protein_types():
     allpros_folder_button = ttk.Button(input_frame, text="Browse", command=select_allpros_folder)
     allpros_folder_button.grid(row=1, column=2)
     
-    allpros_name_label = tk.Label(input_frame, text="Enter File Name for allpros.txt:")
-    allpros_name_label.grid(row=2, column=0)
-    allpros_name_entry = tk.Entry(input_frame, width=40)
-    allpros_name_entry.grid(row=2, column=1, columnspan=2)
-    
     keylengths_folder_label = tk.Label(input_frame, text="KeyLengths Folder:")
     keylengths_folder_label.grid(row=3, column=0)
     keylengths_folder_entry = tk.Entry(input_frame, width=40)
@@ -77,8 +72,7 @@ def open_picking_protein_types():
     def compute():
         file_name = ncbi_entry.get()
         all_pros_folder = allpros_folder_entry.get()
-        all_pros_file_name = allpros_name_entry.get()
-        all_pros_file_path = f"{all_pros_folder}/{all_pros_file_name}"
+        all_pros_file_path = f"{all_pros_folder}/allpros.txt"
         
         output_text.delete(1.0, tk.END)
         
