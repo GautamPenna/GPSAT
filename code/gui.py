@@ -473,7 +473,7 @@ description_label.pack(padx=20, pady=20, fill="both", expand=True)
 # Options Section (Next to Title and Description)
 options_frame = tk.Frame(main_frame, relief="groove", borderwidth=3)
 options_frame.grid(row=0, column=1, rowspan=2, padx=10, pady=5, sticky="nsew")
-options_label = tk.Label(options_frame, text="Options", font=("Times New Roman", 12))
+options_label = tk.Label(options_frame, text="Options", font=("Times New Roman", 25, "bold"))
 options_label.grid(row=0, column=0, columnspan=4, pady=5)
 
 option_buttons = {
