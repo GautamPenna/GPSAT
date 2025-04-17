@@ -15,6 +15,12 @@ def open_picking_protein_types():
     
     label = tk.Label(new_window, text="Picking Protein Types Analysis", font=("Times New Roman", 14, "bold"))
     label.pack(pady=10)
+
+    def show_select_button():
+        select_button.grid(row=0, column=1, padx=5)
+
+    def show_close_button():
+        close_button.grid(row=0, column=2, padx=5)
     
     def select_ncbi_file():
         file_path = filedialog.askopenfilename(title="Select NCBI Input File")
@@ -103,7 +109,7 @@ def open_picking_protein_types():
         keylengths_file_name = keylengths_name_entry.get()
         output_file = f"{keylengths_folder}/{keylengths_file_name}"
         
-        all_pros_file_path = f"{allpros_folder_entry.get()}/{allpros_name_entry.get()}"
+        all_pros_file_path = f"{allpros_folder_entry.get()}/allpros.txt"
         
         # Create a StringIO buffer for capturing print statements
         output_capture = io.StringIO()
@@ -125,14 +131,12 @@ def open_picking_protein_types():
     button_frame = tk.Frame(new_window)
     button_frame.pack(pady=10)
     
-    compute_button = ttk.Button(button_frame, text="Compute", command=compute)
+    compute_button = ttk.Button(button_frame, text="Compute", command=lambda: [compute(), show_select_button()])
     compute_button.grid(row=0, column=0, padx=5)
-    
-    select_button = ttk.Button(button_frame, text="Select Proteins", command=select_proteins)
-    select_button.grid(row=0, column=1, padx=5)
-    
+
+    select_button = ttk.Button(button_frame, text="Select Proteins", command=lambda: [select_proteins(), show_close_button()])
+
     close_button = ttk.Button(button_frame, text="Close", command=new_window.destroy)
-    close_button.grid(row=0, column=2, padx=5)
 
 def open_longest_protein_window():
     new_window = tk.Toplevel(root)
