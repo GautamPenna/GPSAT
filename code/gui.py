@@ -3,6 +3,7 @@ from tkinter import ttk, filedialog
 import functions as func
 import sys
 import io
+from PIL import Image, ImageTk
 
 selected_proteins = []
 # Function to open a new GUI window for Picking Protein Types
@@ -443,6 +444,15 @@ title_label = tk.Label(
 )
 title_label.pack(padx=5, pady=20, fill="both", expand=True)  # Expand to center in the frame
 
+subtitle_label = tk.Label(
+    title_frame,
+    text="Application made by UT Austin Department of Life Sciences",
+    font=("Times New Roman", 12, "italic"),
+    anchor="center",
+    justify="center"
+)
+subtitle_label.pack(pady=(0, 10))
+
 # Description Section
 description_frame = tk.Frame(main_frame, relief="groove", borderwidth=3)
 description_frame.grid(row=1, column=0, padx=5, pady=5, sticky="nsew")
@@ -482,8 +492,8 @@ option_buttons = {
 options_frame.rowconfigure(0, weight=1)  # Title row
 for i in range(3):  # Configure rows for buttons
     options_frame.rowconfigure(i + 1, weight=1)
-for j in range(3):  # Configure columns for buttons
-    options_frame.columnconfigure(j, weight=1)
+for j in range(4):  # Include 3 button columns + 1 for logo
+    options_frame.columnconfigure(j, weight=1 if j < 3 else 0)
 
 # Arrange buttons in a grid (3 rows, 3 columns) with explicit width
 button_grid = [
@@ -496,6 +506,17 @@ for r, row in enumerate(button_grid):
     for c, option in enumerate(row):
         btn = ttk.Button(options_frame, text=option, command=option_buttons[option], width=25)  # Set explicit width
         btn.grid(row=r + 1, column=c, padx=10, pady=10, sticky="nsew")
+
+
+# Load and place the UT logo
+logo_image = Image.open("ut_logo.png")
+logo_image = logo_image.resize((100, 100), Image.Resampling.LANCZOS)
+logo_photo = ImageTk.PhotoImage(logo_image)
+
+# Add to the options_frame (top-right section)
+logo_label = tk.Label(options_frame, image=logo_photo, bg=options_frame.cget("bg"))
+logo_label.image = logo_photo  # prevent garbage collection
+logo_label.grid(row=0, column=3, padx=10, pady=10, sticky="ne")
 
 # Run Application
 root.mainloop()
