@@ -1,5 +1,4 @@
-# VCSAT - Viral Consensus Sequence Analysis Tool
-*Python-based tool for analyzing viral genomes*
+# GPSAT - Genome/Protein Sequence Analysis Tool
 
 This respository contains code files and a step-by-step documentation on how to use VCSAT for Viral Genome Sequence Analysis. Genome downloads from NCBI can be downloaded in a variety of formats, but to parse through the data and determine a *consensus sequence* is difficult. This tool guides its users through a series of steps, starting from downloading the coding regions of requested proteins on NCBI to graphical analysis when compared against the consensus or reference sequences. 
 
