@@ -8,11 +8,11 @@ Built by Gautam Penna - Ke Lab.
 
 ## Rationale
 
-Bioinformatics workflows for sequence alignment and analysis typically require comfort with the command line, scripting, and a patchwork of separate tools. This creates a steep barrier for biology educators, students, and wet-lab researchers who need these analyses but should not have to become software engineers to run them.
+Studying viral and genomic sequences usually means using multiple separate programs — and most of them require the command line. That works for software-savvy researchers, but it shuts out a large part of the biology community.
 
-VGAT GUI was built to close that gap. It wraps industry-standard tools (MAFFT, Biopython, UniProt, NCBI) inside a clean graphical interface. A researcher can go from a database query to a color-coded alignment visualization — without writing a single line of code.
+VGAT GUI exists to fix that. It brings the most common sequence analysis tasks — searching databases, aligning sequences, and visualizing results — into one simple desktop app. No coding required.
 
-The tool is also purpose-built for **teaching**. Students can submit their own sequences as `.vgat` files, and instructors can compare them against a master reference in a single view. This makes VGAT useful not just for research, but as a lab companion for courses in virology, genomics, and molecular biology.
+It is also designed with **classrooms in mind**. Students can export their results as a `.vgat` file and hand them in. Instructors can load all submissions at once and compare them side by side. This makes VGAT useful as both a research tool and a teaching companion.
 
 ---
 
