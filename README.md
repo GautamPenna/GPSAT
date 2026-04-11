@@ -1,4 +1,4 @@
-# VGAT GUI — Viral & Genomic Analysis Toolkit
+# GPSAT - Genome and Protein Sequence Analysis Toolkit
 
 **A desktop application for fetching, aligning, visualizing, and comparing viral and genomic sequences.**
 
