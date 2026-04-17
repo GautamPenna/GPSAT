@@ -2,7 +2,7 @@
 
 **A desktop application for fetching, aligning, visualizing, and comparing viral and genomic sequences.**
 
-Built by KeLab.
+Built by Gautam Penna - KeLab.
 
 ---
 
