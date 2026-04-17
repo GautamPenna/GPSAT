@@ -8,9 +8,9 @@ Built by Gautam Penna - KeLab.
 
 ## Rationale
 
-Studying viral and genomic sequences usually means using multiple separate programs — and most of them require the command line. That works for software-savvy researchers, but it shuts out a large part of the biology community.
+Studying viral and genomic sequences usually means using multiple separate programs, most of them requiring the command line. That works for software-savvy researchers, but it shuts out a large part of the biology community.
 
-GPSAT GUI exists to fix that. It brings the most common sequence analysis tasks — searching databases, aligning sequences, and visualizing results — into one simple desktop app. No coding required.
+GPSAT GUI exists to fix that. It brings the most common sequence analysis tasks - searching databases, aligning sequences, and visualizing results — into one simple desktop app. No coding required.
 
 It is also designed with **classrooms in mind**. Students can export their results as a `.gpsat` file and hand them in. Instructors can load all submissions at once and compare them side by side. This makes GPSAT useful as both a research tool and a teaching companion.
 
